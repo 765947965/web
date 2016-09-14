@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        .reg {
+            width: 30%;
+            height: auto;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 150px;
+        }
+
+        dl {
+            float: left;
+            width: 100%;
+            margin-top: 5%;
+        }
+
+        dt {
+            float: left;
+            margin-top: auto;
+            margin-bottom: auto;
+            vertical-align: middle;
+            width: 15%;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        dd {
+            float: left;
+            vertical-align: middle;
+            text-align: center;
+            height: 30px;
+            line-height: 30px;
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-right: 10px;
+        }
+
+        .input_box {
+            vertical-align: middle;
+            text-align: left;
+            margin-top: auto;
+            height: 30px;
+            width: 45%;
+            line-height: 30px;
+            margin-bottom: auto;
+        }
+
+        .input_box_code {
+            vertical-align: middle;
+            text-align: left;
+            margin-top: auto;
+            height: 30px;
+            width: 25%;
+            line-height: 30px;
+            margin-bottom: auto;
+        }
+
+        .code_image {
+            width: 18.2%;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        input {
+            height: 30px;
+            width: 100%;
+            line-height: 30px;
+        }
+
+        .message {
+            color: #999999;
+            text-align: left;
+            font-size: 12px;
+            line-height: 1.5;
+            width: 30%;
+        }
+    </style>
+    <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery/jquery-1.4.min.js"></script>
+</head>
+<body>
+<div class="reg">
+    <dl>
+        <dt>手机/邮箱</dt>
+        <dd class="input_box"><input type="text" id="phoneEmail" placeholder="手机/邮箱"/></dd>
+        <dd class="message" id="phoneEmail_message">请输入中国大陆手机号码或常用邮箱，可用于登陆和找回密码</dd>
+    </dl>
+    <dl>
+        <dt>密码</dt>
+        <dd class="input_box"><input type="text" id="password" placeholder="密码"/></dd>
+        <dd class="message" id="password_message">长度为6~14个字符,支持数字、大小写字母和标点符号,不允许有空格</dd>
+    </dl>
+    <dl>
+        <dt>验证码</dt>
+        <dd class="input_box_code"><input type="text" id="code" placeholder="验证码"/></dd>
+        <dd class="code_image"><img src="http://oudeqi.com/pc/reg/img/yzm.png"/></dd>
+        <dd class="message" id="code_message">请输入图片中的字符，不区分大小写</dd>
+    </dl>
+</div>
+</body>
+<script>
+    $(document).ready(function () {
+        $("#phoneEmail_message").hide();
+        $("#password_message").hide();
+        $("#code_message").hide();
+        $("#phoneEmail").focus(function () {
+            $("#phoneEmail_message").show();
+        });
+        $("#phoneEmail").blur(function () {
+            $("#phoneEmail_message").hide();
+        });
+        $("#password").focus(function () {
+            $("#password_message").show();
+        });
+        $("#password").blur(function () {
+            $("#password_message").hide();
+        });
+        $("#code").focus(function () {
+            $("#code_message").show();
+        });
+        $("#code").blur(function () {
+            $("#code_message").hide();
+        });
+    });
+</script>
+</html>

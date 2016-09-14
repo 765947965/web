@@ -1,0 +1,168 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <title>登录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        .reg {
+            width: 30%;
+            height: auto;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 150px;
+        }
+
+        dl {
+            float: left;
+            width: 100%;
+            margin-top: 5%;
+        }
+
+        dt {
+            float: left;
+            margin-top: auto;
+            margin-bottom: auto;
+            vertical-align: middle;
+            width: 15%;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        dd {
+            float: left;
+            vertical-align: middle;
+            text-align: center;
+            height: 30px;
+            line-height: 30px;
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-right: 10px;
+        }
+
+        .input_box {
+            vertical-align: middle;
+            text-align: left;
+            margin-top: auto;
+            height: 30px;
+            width: 45%;
+            line-height: 30px;
+            margin-bottom: auto;
+        }
+
+        input {
+            height: 30px;
+            width: 100%;
+            line-height: 30px;
+        }
+
+        .message {
+            color: #999999;
+            text-align: left;
+            font-size: 12px;
+            line-height: 1.5;
+            vertical-align: middle;
+            width: 30%;
+        }
+
+        #loading {
+            background-color: cornflowerblue;
+            font-size: 15px;
+            color: white;
+            padding: 12px;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            border: none;
+            width: 45.5%;
+            margin: 35px auto auto 16.7%;
+        }
+
+        .register {
+            width: 100%;
+            text-align: center;
+            color: mediumblue;
+            font-size: 12px;
+        }
+    </style>
+    <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery/jquery-1.4.min.js"></script>
+</head>
+<body>
+<div class="reg">
+    <dl>
+        <dt>手机/邮箱</dt>
+        <dd class="input_box"><input type="text" id="phoneEmail" placeholder="手机/邮箱"/></dd>
+        <dd class="message" id="phoneEmail_message">请输入中国大陆手机号码或常用邮箱，可用于登陆和找回密码</dd>
+    </dl>
+    <dl>
+        <dt>密码</dt>
+        <dd class="input_box"><input type="text" id="password" placeholder="密码"/></dd>
+        <dd class="message" id="password_message">长度为6~14个字符,支持数字、大小写字母和标点符号,不允许有空格</dd>
+    </dl>
+    <button id="loading"> 提交</button>
+    <br>
+    <dl>
+        <dd class="register"><a href="./register.html">没有账号，注册</a></dd>
+    </dl>
+</div>
+</body>
+<script>
+    $(document).ready(function () {
+        if (localStorage.getItem("username") && localStorage.getItem("password")) {
+            window.location.href = "./main.html"
+        }
+        $("#phoneEmail_message").hide();
+        $("#password_message").hide();
+        $("#phoneEmail").focus(function () {
+            $("#phoneEmail_message").css("color", "#ababab").css("line-height", "1.5").html("请输入中国大陆手机号码或常用邮箱，可用于登陆和找回密码").show();
+        });
+        $("#phoneEmail").blur(function () {
+            $("#phoneEmail_message").hide();
+        });
+        $("#password").focus(function () {
+            $("#password_message").css("color", "#ababab").css("line-height", "1.5").html("长度为6~14个字符,支持数字、大小写字母和标点符号,不允许有空格").show();
+        });
+        $("#password").blur(function () {
+            $("#password_message").hide();
+        });
+        $("#loading").click(function () {
+            if (!$("#phoneEmail").val()) {
+                $("#phoneEmail_message").css("color", "red").css("line-height", "30px").html("请输入用户名").show();
+                return;
+            }
+            if (!$("#password").val()) {
+                $("#password_message").css("color", "red").css("line-height", "30px").html("请输入密码").show();
+                return;
+            }
+            var url = getloadingurl($("#phoneEmail").val(), $("#password").val());
+            /* $.get(url, function (data, status) {
+             $("#phoneEmail_message").css("color", "red").css("line-height", "30px").html(data.message).show();
+             });*/
+            $.ajax({
+                url: url,
+                type: 'get',
+                data: {},
+                async: true, //默认为true 异步
+                dataType: String,
+                error: function () {
+                    alert('error');
+                },
+                success: function (data) {
+                    $("#phoneEmail_message").css("color", "red").css("line-height", "30px").html(data).show();
+                }
+            });
+        });
+
+        function getloadingurl(username, password) {
+            return "http://mobile.8hbao.com:8899/v2/login_v2?sn=69&agent_id=1&pwd=" + password + "&pv=android&v=3.0.0&sign=224f570b24a61a7341c99ff241e51658&brand=Meizu&model=MX5&product=aixin&netmode=1&brandname=aixin&account=" + username;
+        }
+    });
+</script>
+</html>
