@@ -86,6 +86,26 @@
             line-height: 1.5;
             width: 30%;
         }
+
+        #register {
+            background-color: cornflowerblue;
+            font-size: 15px;
+            color: white;
+            padding: 12px;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            border: none;
+            width: 45.5%;
+            margin: 35px auto auto 16.7%;
+        }
+
+        .loading {
+            width: 100%;
+            text-align: center;
+            color: mediumblue;
+            font-size: 12px;
+        }
     </style>
     <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery/jquery-1.4.min.js"></script>
 </head>
@@ -96,41 +116,95 @@
         <dd class="input_box"><input type="text" id="phoneEmail" placeholder="手机/邮箱"/></dd>
         <dd class="message" id="phoneEmail_message">请输入中国大陆手机号码或常用邮箱，可用于登陆和找回密码</dd>
     </dl>
-    <dl>
+    <dl id="dl_pwd">
         <dt>密码</dt>
         <dd class="input_box"><input type="text" id="password" placeholder="密码"/></dd>
         <dd class="message" id="password_message">长度为6~14个字符,支持数字、大小写字母和标点符号,不允许有空格</dd>
     </dl>
-    <dl>
+    <dl id="dl_code">
         <dt>验证码</dt>
-        <dd class="input_box_code"><input type="text" id="code" placeholder="验证码"/></dd>
-        <dd class="code_image"><img src="http://oudeqi.com/pc/reg/img/yzm.png"/></dd>
-        <dd class="message" id="code_message">请输入图片中的字符，不区分大小写</dd>
+        <dd class="input_box"><input type="text" id="code" placeholder="验证码"/></dd>
+        <dd class="message" id="code_message">请输入收到的验证码</dd>
+    </dl>
+    <button id="register">获取手机验证码</button>
+    <br>
+    <dl>
+        <dd class="loading"><a
+            href="./index.html">已有账号，登录</a>
+        </dd>
     </dl>
 </div>
 </body>
 <script>
     $(document).ready(function () {
+        var isHasCode = false;
+        if (localStorage.getItem("phone") && localStorage.getItem("uid")) {
+            window.location.href = "./main.html";
+        }
+
         $("#phoneEmail_message").hide();
         $("#password_message").hide();
         $("#code_message").hide();
+        $("#dl_code").hide();
+        $("#dl_pwd").hide();
         $("#phoneEmail").focus(function () {
-            $("#phoneEmail_message").show();
+            $("#phoneEmail_message").css("color", "#ababab").css("line-height", "1.5").html("请输入中国大陆手机号码或常用邮箱，可用于登陆和找回密码").show();
         });
         $("#phoneEmail").blur(function () {
             $("#phoneEmail_message").hide();
         });
         $("#password").focus(function () {
-            $("#password_message").show();
+            $("#password_message").css("color", "#ababab").css("line-height", "1.5").html("长度为6~14个字符,支持数字、大小写字母和标点符号,不允许有空格").show();
         });
         $("#password").blur(function () {
             $("#password_message").hide();
         });
         $("#code").focus(function () {
-            $("#code_message").show();
+            $("#code_message").css("color", "#ababab").css("line-height", "1.5").html("请输入收到的验证码").show();
         });
         $("#code").blur(function () {
             $("#code_message").hide();
+        });
+        $("#register").click(function () {
+            if (!$("#phoneEmail").val()) {
+                $("#phoneEmail_message").css("color", "red").css("line-height", "30px").html("请输入中国大陆手机号码或常用邮箱，可用于登陆和找回密码").show();
+                return;
+            }
+            if (isHasCode && !$("#code").val()) {
+                $("#code_message").css("color", "red").css("line-height", "30px").html("请输入收到的验证码").show();
+                return;
+            }
+            $.ajax({
+                url: "http://localhost:8080/Tongcheng/api",
+                type: 'post',
+                data: {
+                    "method": "get",
+                    "url": isHasCode ? "register" : "get_register_code",
+                    "data": JSON.stringify({
+                        "account": $("#phoneEmail").val(),
+                        "authcode": $("#code").val(),
+                        "npwd": $("#password").val()
+                    })
+                },
+                async: true, //默认为true 异步
+                dataType: JSON,
+                error: function () {
+                    alert('error');
+                },
+                success: function (data) {
+                    if (!isHasCode) {
+                        isHasCode = true;
+                        $("#dl_code").show();
+                        $("#dl_pwd").show();
+                        $("#register").html("注册");
+                    } else {
+                        var json = JSON.parse(data);
+                        localStorage.setItem("phone", json.phone);
+                        localStorage.setItem("uid", json.uid);
+                        window.location.href = "./main.html"
+                    }
+                }
+            });
         });
     });
 </script>
